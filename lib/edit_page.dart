@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:students/functions/one_student.dart';
 import 'package:students/functions/value_listen.dart';
-import 'package:students/home.dart';
+import 'package:students/home/home.dart';
 
 class Edit extends StatefulWidget {
   final Student values;
-  int index;
-  Edit({super.key, required this.values, required this.index});
+
+  const Edit({
+    super.key,
+    required this.values,
+  });
 
   @override
-  State<Edit> createState() => _EditState(values: values, index: index);
+  State<Edit> createState() => _EditState();
 }
 
 class _EditState extends State<Edit> {
- 
-  final Student values;
-  int index;
-  _EditState({required this.values, required this.index});
+  _EditState();
 
   final formkey = GlobalKey<FormState>();
 
@@ -60,7 +60,7 @@ class _EditState extends State<Edit> {
                       radius: 130,
                       backgroundImage: editImageFile != null
                           ? FileImage(File(editImageFile!.path))
-                          : FileImage(File(values.photo)),
+                          : FileImage(File(widget.values.photo)),
                     ),
                     ElevatedButton.icon(
                         onPressed: () async {
@@ -72,16 +72,16 @@ class _EditState extends State<Edit> {
                               // imageFile = imageFile;
                             });
                           } else {
-                            editImageFile = values.photo as File;
+                            editImageFile =widget.values.photo as File;
                           }
                         },
                         icon: const Icon(Icons.add_a_photo),
-                        label: const Text('Add Image')),
+                        label: const Text('Edit Image')),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(22, 3, 22, 3),
                       child: TextFormField(
                         // initialValue: 'hai',
-                        controller: _nameControllor..text = values.name,
+                        controller: _nameControllor..text = widget.values.name,
                         style: const TextStyle(fontSize: 22),
                         decoration: InputDecoration(
                             hintText: 'Your Name',
@@ -103,7 +103,7 @@ class _EditState extends State<Edit> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
                       child: TextFormField(
-                        controller: _ageControllor..text = values.age,
+                        controller: _ageControllor..text = widget.values.age,
                         style: const TextStyle(fontSize: 22),
                         decoration: InputDecoration(
                             hintText: 'Your Age',
@@ -126,7 +126,7 @@ class _EditState extends State<Edit> {
                       padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
                       child: TextFormField(
                         controller: _qualificationControllor
-                          ..text = values.qualification,
+                          ..text = widget.values.qualification,
                         style: const TextStyle(fontSize: 22),
                         decoration: InputDecoration(
                             hintText: 'Your Qualification',
@@ -148,7 +148,7 @@ class _EditState extends State<Edit> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
                       child: TextFormField(
-                        controller: _domainControllor..text = values.domain,
+                        controller: _domainControllor..text = widget.values.domain,
                         style: const TextStyle(fontSize: 22),
                         decoration: InputDecoration(
                             hintText: 'Your Domain',
@@ -170,7 +170,7 @@ class _EditState extends State<Edit> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
                       child: TextFormField(
-                        controller: _phoneControllor..text = values.phone,
+                        controller: _phoneControllor..text = widget.values.phone,
                         style: const TextStyle(fontSize: 22),
                         decoration: InputDecoration(
                             hintText: ' Your Phone Number',
@@ -195,10 +195,10 @@ class _EditState extends State<Edit> {
                     ElevatedButton.icon(
                         onPressed: () {
                           if (formkey.currentState!.validate()) {
-                            editCheckingValues(values.id!);
+                            editCheckingValues(widget.values.id!);
                             //  (editImage==null)
                             // checkingValues();
-                            // editCheckingValues(widget.values.id!);
+                            // editCheckingValues(widget.widget.value.id!);
                             // print(widget.values.id);
 
                             Navigator.of(context).pushAndRemoveUntil(
@@ -237,6 +237,6 @@ class _EditState extends State<Edit> {
         photo: photo,
         id: id);
 
-   Operations.updatestudent(id, studentData);
+    Operations.updatestudent(id, studentData);
   }
 }

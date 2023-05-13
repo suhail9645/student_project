@@ -180,7 +180,7 @@ class Information extends StatelessWidget {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => Edit(
                       values: values,
-                      index: index,
+                     
                     ),
                   ));
                 },
