@@ -13,3 +13,7 @@ class EditStudentEvent extends EditEvent {
     await studentDB.put(studentData.id, studentData);
   }
 }
+class  EditPageIitialEvent extends EditEvent{
+  final Student student;
+  EditPageIitialEvent({required this.student});
+}

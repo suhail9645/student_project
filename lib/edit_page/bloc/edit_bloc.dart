@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
+import 'package:students/core/text_form_core.dart';
 
 
 import '../../model/one_student.dart';
@@ -15,7 +16,15 @@ part 'edit_state.dart';
 
 class EditBloc extends Bloc<EditEvent, EditState> {
   EditBloc() : super(EditInitial()) {
-    on<EditEvent>((event, emit) {});
+    on<EditPageIitialEvent>(editPageIitialEvent);
+  }
+
+  FutureOr<void> editPageIitialEvent(EditPageIitialEvent event, Emitter<EditState> emit) {
+    controllerList[0].text=event.student.name;
+    controllerList[1].text=event.student.age;
+    controllerList[2].text=event.student.qualification;
+    controllerList[3].text=event.student.domain;
+    controllerList[4].text=event.student.phone;
   }
 }
 

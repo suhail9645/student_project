@@ -16,4 +16,4 @@ class AddStudentAndPopIntoHome extends AddPageEvent {
 
 class AddProfileImage extends AddPageEvent {}
 
-class SaveStudent extends AddPageEvent {}
+class InitialEvent extends AddPageEvent {}

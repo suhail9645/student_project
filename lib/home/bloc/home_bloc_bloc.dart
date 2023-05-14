@@ -23,6 +23,7 @@ class HomeBlocBloc extends Bloc<HomeBlocEvent, HomeBlocState> {
     final studentDB = await Hive.openBox<Student>('school');
     List<Student> allData = [];
     allData.addAll(studentDB.values);
+    await Future.delayed(const Duration(seconds: 2));
     emit(HomeSuccess(students: allData));
   }
 

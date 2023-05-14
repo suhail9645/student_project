@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:image_picker/image_picker.dart';
+// ignore: depend_on_referenced_packages
 import 'package:meta/meta.dart';
+import 'package:students/core/text_form_core.dart';
 
 
 import '../../model/one_student.dart';
@@ -16,6 +18,7 @@ class AddPageBloc extends Bloc<AddPageEvent, AddPageState> {
   AddPageBloc() : super(AddPageInitial()) {
     on<AddProfileImage>(addProfileImage);
     on<AddStudentAndPopIntoHome>(addStudentAndPopIntoHome);
+    on<InitialEvent>(initialEvent);
   }
 
   FutureOr<void> addProfileImage(
@@ -33,5 +36,11 @@ class AddPageBloc extends Bloc<AddPageEvent, AddPageState> {
   FutureOr<void> addStudentAndPopIntoHome(AddStudentAndPopIntoHome event, Emitter<AddPageState> emit)async {
   await event.addStudent();
     emit(PopIntoHomeState());
+  }
+
+  FutureOr<void> initialEvent(InitialEvent event, Emitter<AddPageState> emit) {
+    for (var element in controllerList) {
+      element.clear();
+    }
   }
 }

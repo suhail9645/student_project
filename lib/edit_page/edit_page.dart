@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:students/core/text_form_core.dart';
 import 'package:students/edit_page/bloc/edit_bloc.dart';
 import 'package:students/home/home.dart';
+import 'package:students/widget/text_form_field.dart';
 
 import '../model/one_student.dart';
 
@@ -16,25 +18,14 @@ class Edit extends StatelessWidget {
 
   final formkey = GlobalKey<FormState>();
 
-  File? editImage;
-
   File? editImageFile;
 
-  final _nameControllor = TextEditingController();
-
-  final _ageControllor = TextEditingController();
-
-  final _qualificationControllor = TextEditingController();
-
-  final _domainControllor = TextEditingController();
-
-  final _phoneControllor = TextEditingController();
-
-  // bool editImageValidation = true;
   @override
   Widget build(BuildContext context) {
+    EditBloc editBloc=EditBloc();
     EditImageBloc editImageBloc = EditImageBloc(File(values.photo));
     EditStudentBloc editStudentBloc = EditStudentBloc();
+    editBloc.add(EditPageIitialEvent(student: values));
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -62,140 +53,25 @@ class Edit extends StatelessWidget {
                     children: [
                       BlocBuilder<EditImageBloc, EditImageState>(
                         builder: (context, state) {
-                          editImageFile=state.image;
+                          editImageFile = state.image;
                           return CircleAvatar(
                             radius: 130,
                             backgroundImage: FileImage(state.image),
-                            // backgroundImage: editImageFile != null
-                            //     ? FileImage(File(editImageFile!.path))
-                            //     : FileImage(File(widget.values.photo)),
                           );
                         },
                       ),
                       ElevatedButton.icon(
                           onPressed: () async {
-                           editImageBloc.add(EditImageEvent());
+                            editImageBloc.add(EditImageEvent());
                           },
                           icon: const Icon(Icons.add_a_photo),
                           label: const Text('Edit Image')),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(22, 3, 22, 3),
-                        child: TextFormField(
-                          controller: _nameControllor
-                            ..text = values.name,
-                          style: const TextStyle(fontSize: 22),
-                          decoration: InputDecoration(
-                              hintText: 'Your Name',
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              )),
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'This Field Is Required';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
-                        child: TextFormField(
-                          controller: _ageControllor..text = values.age,
-                          style: const TextStyle(fontSize: 22),
-                          decoration: InputDecoration(
-                              hintText: 'Your Age',
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              )),
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'This Field Is Required';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
-                        child: TextFormField(
-                          controller: _qualificationControllor
-                            ..text = values.qualification,
-                          style: const TextStyle(fontSize: 22),
-                          decoration: InputDecoration(
-                              hintText: 'Your Qualification',
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              )),
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'This Field Is Required';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
-                        child: TextFormField(
-                          controller: _domainControllor
-                            ..text = values.domain,
-                          style: const TextStyle(fontSize: 22),
-                          decoration: InputDecoration(
-                              hintText: 'Your Domain',
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              )),
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'This Field Is Required';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
-                        child: TextFormField(
-                          controller: _phoneControllor
-                            ..text = values.phone,
-                          style: const TextStyle(fontSize: 22),
-                          decoration: InputDecoration(
-                              hintText: ' Your Phone Number',
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              )),
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return 'This Field Is Required';
-                            }
-                            return null;
-                          },
-                        ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return TextFormFieldWidget(index: index);
+                        },
                       ),
                       const SizedBox(
                         height: 30,
@@ -217,7 +93,6 @@ class Edit extends StatelessWidget {
                                       studentData: editCheckingValues()));
                                   return;
                                 }
-
                               },
                               icon: const Icon(Icons.save_alt),
                               label: const Text('Update'));
@@ -233,11 +108,11 @@ class Edit extends StatelessWidget {
   }
 
   Student editCheckingValues() {
-    final name = _nameControllor.text;
-    final age = _ageControllor.text;
-    final qualification = _qualificationControllor.text;
-    final domain = _domainControllor.text;
-    final phone = _phoneControllor.text;
+    final name = controllerList[0].text;
+    final age = controllerList[1].text;
+    final qualification = controllerList[2].text;
+    final domain = controllerList[3].text;
+    final phone = controllerList[4].text;
     final photo = editImageFile!.path;
     final studentData = Student(
         name: name,
