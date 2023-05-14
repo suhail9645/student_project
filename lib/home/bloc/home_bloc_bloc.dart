@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:meta/meta.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:students/functions/value_listen.dart';
-import '../../functions/one_student.dart';
+import '../../model/one_student.dart';
 
 part 'home_bloc_event.dart';
 part 'home_bloc_state.dart';
@@ -16,6 +14,7 @@ class HomeBlocBloc extends Bloc<HomeBlocEvent, HomeBlocState> {
     on<EventNavigateIntoAddPage>(eventNavigateIntoAddPage);
     on<EventNavigateIntoSearch>(eventNavigateIntoSearch);
     on<EventNavigateIntoProfilePage>(eventNavigateIntoProfilePage);
+    on<EventDeleteStudent>(eventDeleteStudent);
   }
 
   FutureOr<void> homeInitialEvent(
@@ -41,4 +40,12 @@ class HomeBlocBloc extends Bloc<HomeBlocEvent, HomeBlocState> {
       EventNavigateIntoProfilePage event, Emitter<HomeBlocState> emit) {
         emit(HomeNavigateIntoProfilePage(student: event.student));
       }
+
+  FutureOr<void> eventDeleteStudent(EventDeleteStudent event, Emitter<HomeBlocState> emit)async {
+  final studentDb= await event.deleteStudent();
+  List<Student> allData = [];
+  allData.addAll(studentDb.values);
+  emit(HomeSuccess(students: allData));
+  
+  }
 }

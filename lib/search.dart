@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:students/functions/one_student.dart';
-import 'package:students/functions/value_listen.dart';
-import 'package:students/information.dart';
+
+import 'package:students/profile_page/information.dart';
+
+import 'model/value_listen.dart';
 
 class PageSearch extends SearchDelegate {
-  final operate = Operations();
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -40,7 +40,7 @@ class PageSearch extends SearchDelegate {
     return ValueListenableBuilder(
       valueListenable: Operations.studentListNotifier,
       builder:
-          ((BuildContext context, List<Student> studentList, Widget? child) {
+          ((BuildContext context,  studentList, Widget? child) {
         return ListView.builder(
           itemBuilder: (ctx, index) {
             final data = studentList[index];
@@ -52,7 +52,7 @@ class PageSearch extends SearchDelegate {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: ((context) {
-                            return Information(values: data, index: index);
+                            return Information(values: data,);
                           }),
                         ),
                       );

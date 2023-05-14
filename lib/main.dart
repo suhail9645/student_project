@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:students/functions/one_student.dart';
-import 'package:students/functions/value_listen.dart';
 import 'package:students/home/home.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import 'model/one_student.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -5,7 +5,9 @@ import 'package:bloc/bloc.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
-import 'package:students/functions/one_student.dart';
+
+
+import '../../model/one_student.dart';
 
 part 'add_page_event.dart';
 part 'add_page_state.dart';

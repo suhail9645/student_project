@@ -1,12 +1,8 @@
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:students/edit_page.dart';
-import 'package:students/functions/one_student.dart';
-import 'package:students/functions/value_listen.dart';
 import 'package:students/home/bloc/home_bloc_bloc.dart';
-import 'package:students/information.dart';
+import 'package:students/profile_page/information.dart';
 import 'package:students/add_page/add_page.dart';
 import 'package:students/search.dart';
 
@@ -17,7 +13,7 @@ class MyHome extends StatelessWidget {
   Widget build(BuildContext context) {
     HomeBlocBloc homeBlocBloc = HomeBlocBloc();
     homeBlocBloc.add(HomeInitialEvent());
-    Operations.getStudent();
+
     return BlocConsumer<HomeBlocBloc, HomeBlocState>(
       bloc: homeBlocBloc,
       buildWhen: (previous, current) => current is! HomeActionState,
@@ -31,10 +27,9 @@ class MyHome extends StatelessWidget {
           ));
         } else if (state is HomeNavigateIntoProfilePage) {
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Edit(
-              values: state.student,
-            ),
-          ));
+              builder: (context) => Information(
+                    values: state.student,
+                  )));
         }
       },
       builder: (context, state) {
@@ -72,7 +67,6 @@ class MyHome extends StatelessWidget {
                                 onTap: () {
                                   homeBlocBloc.add(EventNavigateIntoProfilePage(
                                       student: successState.students[index]));
-                                  
                                 },
                                 title: Text(
                                   values.name,
@@ -89,8 +83,10 @@ class MyHome extends StatelessWidget {
                                     IconButton(
                                         onPressed: () {
                                           //  deleteStudent(index);
-                                          Operations.deleteStudent(values.id!);
-                                          homeBlocBloc.add(HomeInitialEvent());
+
+                                          homeBlocBloc.add(EventDeleteStudent(
+                                              id: successState
+                                                  .students[index].id!));
                                         },
                                         icon: const Icon(Icons.delete,
                                             color: Colors.red))
@@ -114,6 +110,7 @@ class MyHome extends StatelessWidget {
                           ),
                           onPressed: () {
                             homeBlocBloc.add(EventNavigateIntoAddPage());
+                            // homeBlocBloc.add(HomeInitialEvent());
                           },
                         ),
                       ),

@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:students/functions/one_student.dart';
+
+import 'one_student.dart';
+
 
 class Operations {
   static ValueNotifier<List<Student>> studentListNotifier = ValueNotifier([]);

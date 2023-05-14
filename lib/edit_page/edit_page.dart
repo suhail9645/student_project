@@ -1,17 +1,25 @@
 import 'dart:io';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:students/edit_page/bloc/edit_bloc.dart';
 import 'package:students/home/home.dart';
 
 import '../model/one_student.dart';
-import 'bloc/add_page_bloc.dart';
 
-// ignore: must_be_immutable
-class MyProfile extends StatelessWidget {
-   MyProfile({super.key, });
-  
+class Edit extends StatelessWidget {
+  final Student values;
+
+   Edit({
+    super.key,
+    required this.values,
+  });
+
+  final formkey = GlobalKey<FormState>();
+
+  File? editImage;
+
+  File? editImageFile;
+
   final _nameControllor = TextEditingController();
 
   final _ageControllor = TextEditingController();
@@ -22,35 +30,22 @@ class MyProfile extends StatelessWidget {
 
   final _phoneControllor = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
-
-  ImagePicker picker = ImagePicker();
-
-  File? image;
-
-  File? imageFile;
-
-  bool imageValidation = true;
-
+  // bool editImageValidation = true;
   @override
   Widget build(BuildContext context) {
-    AddPageBloc addPageBloc = AddPageBloc();
-    return BlocConsumer<AddPageBloc, AddPageState>(
-      bloc: addPageBloc,
-      // buildWhen: (previous, current) => current is !AddPageActionState,
-      // listenWhen:(previous, current) => current is AddPageActionState,
-      listener: (context, state) {
-        if (state is AddImageState) {
-          imageFile = state.image;
-        } else if (state is PopIntoHomeState) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => const MyHome(),
-          ));
-        }
-      },
-      builder: (context, state) {
-        return Scaffold(
-          body: Container(
+    EditImageBloc editImageBloc = EditImageBloc(File(values.photo));
+    EditStudentBloc editStudentBloc = EditStudentBloc();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => editImageBloc,
+        ),
+        BlocProvider(
+          create: (context) => editStudentBloc,
+        )
+      ],
+      child: Scaffold(
+        body: Container(
             width: double.infinity,
             height: double.infinity,
             decoration: const BoxDecoration(
@@ -62,38 +57,34 @@ class MyProfile extends StatelessWidget {
               child: SafeArea(
                   child: Center(
                 child: Form(
-                  key: _formKey,
+                  key: formkey,
                   child: Column(
                     children: [
-                      CircleAvatar(
-                          radius: 130,
-                          backgroundImage: imageFile != null
-                              ? FileImage(File(imageFile!.path))
-                              : const AssetImage('assets/person_image.jfif')
-                                  as ImageProvider),
-                      Visibility(
-                        visible: imageFile == null,
-                        child: const Text('Please Add Photo'),
+                      BlocBuilder<EditImageBloc, EditImageState>(
+                        builder: (context, state) {
+                          editImageFile=state.image;
+                          return CircleAvatar(
+                            radius: 130,
+                            backgroundImage: FileImage(state.image),
+                            // backgroundImage: editImageFile != null
+                            //     ? FileImage(File(editImageFile!.path))
+                            //     : FileImage(File(widget.values.photo)),
+                          );
+                        },
                       ),
                       ElevatedButton.icon(
                           onPressed: () async {
-                            addPageBloc.add(AddProfileImage());
+                           editImageBloc.add(EditImageEvent());
                           },
                           icon: const Icon(Icons.add_a_photo),
-                          label: const Text('Add Image')),
+                          label: const Text('Edit Image')),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(22, 10, 22, 10),
+                        padding: const EdgeInsets.fromLTRB(22, 3, 22, 3),
                         child: TextFormField(
-                          cursorColor: Colors.black,
-                          controller: _nameControllor,
+                          controller: _nameControllor
+                            ..text = values.name,
                           style: const TextStyle(fontSize: 22),
                           decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.fromLTRB(10, 15, 10, 15),
-                              label: const Text('Name',
-                                  style: TextStyle(color: Colors.black)),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
                               hintText: 'Your Name',
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
@@ -112,19 +103,11 @@ class MyProfile extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(22, 10, 22, 10),
+                        padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
                         child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          cursorColor: Colors.black,
-                          controller: _ageControllor,
+                          controller: _ageControllor..text = values.age,
                           style: const TextStyle(fontSize: 22),
                           decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.fromLTRB(10, 15, 10, 15),
-                              label: const Text('Age',
-                                  style: TextStyle(color: Colors.black)),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
                               hintText: 'Your Age',
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
@@ -143,18 +126,12 @@ class MyProfile extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(22, 10, 22, 10),
+                        padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
                         child: TextFormField(
-                          cursorColor: Colors.black,
-                          controller: _qualificationControllor,
+                          controller: _qualificationControllor
+                            ..text = values.qualification,
                           style: const TextStyle(fontSize: 22),
                           decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.fromLTRB(10, 15, 10, 15),
-                              label: const Text('Qualification',
-                                  style: TextStyle(color: Colors.black)),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
                               hintText: 'Your Qualification',
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
@@ -173,18 +150,12 @@ class MyProfile extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(22, 10, 22, 10),
+                        padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
                         child: TextFormField(
-                          cursorColor: Colors.black,
-                          controller: _domainControllor,
+                          controller: _domainControllor
+                            ..text = values.domain,
                           style: const TextStyle(fontSize: 22),
                           decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.fromLTRB(10, 15, 10, 15),
-                              label: const Text('Domain',
-                                  style: TextStyle(color: Colors.black)),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
                               hintText: 'Your Domain',
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
@@ -203,19 +174,12 @@ class MyProfile extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(22, 10, 22, 10),
+                        padding: const EdgeInsets.fromLTRB(22, 3, 22, 2),
                         child: TextFormField(
-                          keyboardType: TextInputType.phone,
-                          cursorColor: Colors.black,
-                          controller: _phoneControllor,
+                          controller: _phoneControllor
+                            ..text = values.phone,
                           style: const TextStyle(fontSize: 22),
                           decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.fromLTRB(10, 15, 10, 15),
-                              label: const Text('Number',
-                                  style: TextStyle(color: Colors.black)),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
                               hintText: ' Your Phone Number',
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
@@ -236,44 +200,54 @@ class MyProfile extends StatelessWidget {
                       const SizedBox(
                         height: 30,
                       ),
-                      ElevatedButton.icon(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              if (imageFile != null) {
-                                
-                                addPageBloc.add(AddStudentAndPopIntoHome(student: checkingValues()));
-                                // Navigator.of(context).pop();
-                                return;
-                              }
-                            }
-                          },
-                          icon: const Icon(Icons.save_alt),
-                          label: const Text('Save'))
+                      BlocConsumer<EditStudentBloc, EditStudentState>(
+                        bloc: editStudentBloc,
+                        listener: (context, state) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) => const MyHome(),
+                              ),
+                              (route) => false);
+                        },
+                        builder: (context, state) {
+                          return ElevatedButton.icon(
+                              onPressed: () {
+                                if (formkey.currentState!.validate()) {
+                                  editStudentBloc.add(EditStudentEvent(
+                                      studentData: editCheckingValues()));
+                                  return;
+                                }
+
+                              },
+                              icon: const Icon(Icons.save_alt),
+                              label: const Text('Update'));
+                        },
+                      )
                     ],
                   ),
                 ),
               )),
-            ),
-          ),
-        );
-      },
+            )),
+      ),
     );
   }
 
- Student checkingValues() {
+  Student editCheckingValues() {
     final name = _nameControllor.text;
     final age = _ageControllor.text;
     final qualification = _qualificationControllor.text;
     final domain = _domainControllor.text;
     final phone = _phoneControllor.text;
-    final photo = imageFile!.path;
+    final photo = editImageFile!.path;
     final studentData = Student(
         name: name,
         age: age,
         qualification: qualification,
         domain: domain,
         phone: phone,
-        photo: photo);
+        photo: photo,
+        id: values.id);
+
     return studentData;
   }
 }

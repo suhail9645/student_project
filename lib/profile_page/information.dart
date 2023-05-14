@@ -1,15 +1,23 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:students/edit_page.dart';
-import 'package:students/functions/one_student.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:students/edit_page/edit_page.dart';
+
+import 'package:students/profile_page/bloc/profile_bloc.dart';
+
+import '../model/one_student.dart';
 
 class Information extends StatelessWidget {
   final Student values;
-  int index;
-  Information({super.key, required this.values, required this.index});
+
+  Information({
+    super.key,
+    required this.values,
+  });
 
   @override
   Widget build(BuildContext context) {
+    ProfileBloc profileBloc = ProfileBloc();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purpleAccent,
@@ -174,17 +182,22 @@ class Information extends StatelessWidget {
                     ),
                   )),
             ),
-            ElevatedButton(
-                style: const ButtonStyle(),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Edit(
-                      values: values,
-                     
-                    ),
-                  ));
-                },
-                child: const Text('EDIT'))
+            BlocConsumer<ProfileBloc, ProfileState>(
+              bloc: profileBloc,
+              listener: (context, state) {
+               if(state is NavigateIntoEditPagestate){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Edit(values: values),));
+               }
+              },
+              builder: (context, state) {
+                return ElevatedButton(
+                    style: const ButtonStyle(),
+                    onPressed: () {
+                      profileBloc.add(NavigateIntoEditPage());
+                    },
+                    child: const Text('EDIT'));
+              },
+            )
           ],
         )),
       )),
