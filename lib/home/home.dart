@@ -5,7 +5,8 @@ import 'package:students/home/bloc/home_bloc_bloc.dart';
 import 'package:students/profile_page/information.dart';
 import 'package:students/add_page/add_page.dart';
 import 'package:students/search.dart';
-
+import 'package:getwidget/getwidget.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 class MyHome extends StatelessWidget {
   const MyHome({super.key});
 
@@ -20,7 +21,8 @@ class MyHome extends StatelessWidget {
       listenWhen: (previous, current) => current is HomeActionState,
       listener: (context, state) {
         if (state is HomeNavigateIntoSearch) {
-          showSearch(context: context, delegate: PageSearch());
+          showSearch(
+              context: context, delegate: PageSearch(student: state.students));
         } else if (state is HomeNavigateIntoAddPage) {
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => MyProfile(),
@@ -51,7 +53,8 @@ class MyHome extends StatelessWidget {
                 actions: [
                   IconButton(
                       onPressed: () {
-                        homeBlocBloc.add(EventNavigateIntoSearch());
+                        homeBlocBloc.add(EventNavigateIntoSearch(
+                            students: successState.students));
                       },
                       icon: const Icon(Icons.search))
                 ],
@@ -60,49 +63,48 @@ class MyHome extends StatelessWidget {
                 child: Column(
                   children: [
                     Expanded(
-                        child: ListView.separated(
+                        child: ListView.builder(
                             itemBuilder: (context, index) {
                               final values = successState.students[index];
-                              return ListTile(
-                                onTap: () {
-                                  homeBlocBloc.add(EventNavigateIntoProfilePage(
-                                      student: successState.students[index]));
-                                },
-                                title: Text(
-                                  values.name,
-                                  style: const TextStyle(
-                                      fontSize: 20, color: Colors.white),
-                                ),
-                                leading: CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage:
-                                      FileImage(File(values.photo)),
-                                ),
-                                trailing: Wrap(
-                                  children: [
-                                    IconButton(
-                                        onPressed: () {
-                                          //  deleteStudent(index);
+                              return GFListTile(
+                                  onTap: () {
+                                    homeBlocBloc.add(
+                                        EventNavigateIntoProfilePage(
+                                            student:
+                                                successState.students[index]));
+                                  },
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 0, vertical: 0),
+                                  shadow: const BoxShadow(),
+                                  color:
+                                      const Color.fromARGB(255, 222, 230, 238),
+                                  avatar: Image.file(
+                                    File(values.photo),
+                                    height: 60,
+                                    width: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  titleText: values.name,
+                                  icon: IconButton(
+                                      onPressed: () {
+                                        //  deleteStudent(index);
 
-                                          homeBlocBloc.add(EventDeleteStudent(
-                                              id: successState
-                                                  .students[index].id!));
-                                        },
-                                        icon: const Icon(Icons.delete,
-                                            color: Colors.red))
-                                  ],
-                                ),
-                              );
+                                        homeBlocBloc.add(EventDeleteStudent(
+                                            id: successState
+                                                .students[index].id!));
+                                      },
+                                      icon: const Icon(Icons.delete,
+                                          color: Colors.red)));
+                              
                             },
-                            separatorBuilder: (context, index) => const Divider(
-                                  color: Colors.amberAccent,
-                                ),
                             itemCount: successState.students.length)),
                     Align(
                       alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(30.0),
+                      child: AvatarGlow(
+                        endRadius: 60,
+                        glowColor: Colors.pink,
                         child: FloatingActionButton(
+                         
                           backgroundColor: Colors.pinkAccent,
                           child: const Icon(
                             Icons.add,
@@ -110,7 +112,7 @@ class MyHome extends StatelessWidget {
                           ),
                           onPressed: () {
                             homeBlocBloc.add(EventNavigateIntoAddPage());
-                            // homeBlocBloc.add(HomeInitialEvent());
+                           
                           },
                         ),
                       ),

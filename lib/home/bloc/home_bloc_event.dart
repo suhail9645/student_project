@@ -5,7 +5,10 @@ abstract class HomeBlocEvent {}
 
 class HomeInitialEvent extends HomeBlocEvent {}
 
-class EventNavigateIntoSearch extends HomeBlocEvent {}
+class EventNavigateIntoSearch extends HomeBlocEvent {
+  final List<Student>students;
+  EventNavigateIntoSearch({required this.students});
+}
 
 class EventNavigateIntoAddPage extends HomeBlocEvent {}
 

@@ -33,7 +33,7 @@ class HomeBlocBloc extends Bloc<HomeBlocEvent, HomeBlocState> {
 
   FutureOr<void> eventNavigateIntoSearch(
       EventNavigateIntoSearch event, Emitter<HomeBlocState> emit) {
-    emit(HomeNavigateIntoSearch());
+    emit(HomeNavigateIntoSearch(students: event.students));
   }
 
   FutureOr<void> eventNavigateIntoProfilePage(

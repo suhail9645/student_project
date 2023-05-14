@@ -14,7 +14,10 @@ class HomeSuccess extends HomeBlocState {
   HomeSuccess({required this.students});
 }
 
-class HomeNavigateIntoSearch extends HomeActionState {}
+class HomeNavigateIntoSearch extends HomeActionState {
+  final List<Student>students;
+  HomeNavigateIntoSearch({required this.students});
+}
 
 class HomeNavigateIntoAddPage extends HomeActionState {}
 

@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'package:students/profile_page/information.dart';
 
+import 'model/one_student.dart';
 import 'model/value_listen.dart';
 
 class PageSearch extends SearchDelegate {
+  final List<Student> student;
+  PageSearch({required this.student});
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -37,41 +40,37 @@ class PageSearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: Operations.studentListNotifier,
-      builder:
-          ((BuildContext context,  studentList, Widget? child) {
-        return ListView.builder(
-          itemBuilder: (ctx, index) {
-            final data = studentList[index];
-            if (data.name.toLowerCase().contains(query.toLowerCase().trim())) {
-              return Column(
-                children: [
-                  ListTile(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: ((context) {
-                            return Information(values: data,);
-                          }),
-                        ),
-                      );
-                    },
-                    title: Text(data.name),
-                    leading: CircleAvatar(
-                      backgroundImage: FileImage(File(data.photo)),
+    return ListView.builder(
+      itemBuilder: (ctx, index) {
+        final data = student[index];
+        if (data.name.toLowerCase().contains(query.toLowerCase().trim())) {
+          return Column(
+            children: [
+              ListTile(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: ((context) {
+                        return Information(
+                          values: data,
+                        );
+                      }),
                     ),
-                  ),
-                  const Divider()
-                ],
-              );
-            } else {
-              return Container();
-            }
-          },
-          itemCount: studentList.length,
-        );
-      }),
+                  );
+                },
+                title: Text(data.name),
+                leading: CircleAvatar(
+                  backgroundImage: FileImage(File(data.photo)),
+                ),
+              ),
+              const Divider()
+            ],
+          );
+        } else {
+          return Container();
+        }
+      },
+      itemCount: student.length,
     );
   }
 }
