@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:students/home/home.dart';
 import '../core/text_form_core.dart';
+import '../main.dart';
 import '../model/one_student.dart';
 import '../widget/text_form_field.dart';
 import 'bloc/add_page_bloc.dart';
-
+import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 class MyProfile extends StatefulWidget {
  const MyProfile({
     super.key,
@@ -59,7 +60,7 @@ class _MyProfileState extends State<MyProfile> {
                   child: Column(
                     children: [
                       CircleAvatar(
-                          radius: 130,
+                          radius: 120,
                           backgroundImage: imageFile != null
                               ? FileImage(File(imageFile!.path))
                               : const AssetImage('assets/person_image.jfif')
@@ -70,12 +71,16 @@ class _MyProfileState extends State<MyProfile> {
                           },
                           icon: const Icon(Icons.add_a_photo),
                           label: const Text('Add Image')),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: 5,
-                        itemBuilder: (context, index) {
-                          return TextFormFieldWidget(index: index);
-                        },
+                    ScrollConfiguration(
+               behavior: MyBehavior(),
+                        child: ListView.builder(
+                          
+                          shrinkWrap: true,
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return TextFormFieldWidget(index: index);
+                          },
+                        ),
                       ),
                       const SizedBox(
                         height: 30,

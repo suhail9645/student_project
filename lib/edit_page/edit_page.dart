@@ -6,12 +6,14 @@ import 'package:students/edit_page/bloc/edit_bloc.dart';
 import 'package:students/home/home.dart';
 import 'package:students/widget/text_form_field.dart';
 
+import '../main.dart';
 import '../model/one_student.dart';
 
+// ignore: must_be_immutable
 class Edit extends StatelessWidget {
   final Student values;
 
-   Edit({
+  Edit({
     super.key,
     required this.values,
   });
@@ -22,7 +24,7 @@ class Edit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    EditBloc editBloc=EditBloc();
+    EditBloc editBloc = EditBloc();
     EditImageBloc editImageBloc = EditImageBloc(File(values.photo));
     EditStudentBloc editStudentBloc = EditStudentBloc();
     editBloc.add(EditPageIitialEvent(student: values));
@@ -66,12 +68,15 @@ class Edit extends StatelessWidget {
                           },
                           icon: const Icon(Icons.add_a_photo),
                           label: const Text('Edit Image')),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: 5,
-                        itemBuilder: (context, index) {
-                          return TextFormFieldWidget(index: index);
-                        },
+                      ScrollConfiguration(
+                        behavior: MyBehavior(),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return TextFormFieldWidget(index: index);
+                          },
+                        ),
                       ),
                       const SizedBox(
                         height: 30,
