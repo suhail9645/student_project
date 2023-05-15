@@ -1,10 +1,9 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:hive_flutter/adapters.dart';
+// ignore: depend_on_referenced_packages
 import 'package:meta/meta.dart';
 import '../../model/one_student.dart';
-
 part 'home_bloc_event.dart';
 part 'home_bloc_state.dart';
 

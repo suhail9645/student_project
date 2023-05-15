@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-
 import 'package:students/profile_page/information.dart';
-
 import 'model/one_student.dart';
-import 'model/value_listen.dart';
+
 
 class PageSearch extends SearchDelegate {
   final List<Student> student;
